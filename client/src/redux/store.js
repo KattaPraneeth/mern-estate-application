@@ -10,14 +10,14 @@ const persistConfig = {
   key: 'root',
   storage,
   version: 1,
-}
+};
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-    serializableCheck: false,
+    serializableCheck: true,
   }),
 });
 
