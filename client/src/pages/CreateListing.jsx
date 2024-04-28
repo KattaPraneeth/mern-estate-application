@@ -116,7 +116,7 @@ export default function CreateListing() {
           <div className="flex gap-4">
             <input
               type="file"
-              className="p-3 border-gray-300 rounded-lg w-full"
+              className="p-3 border border-gray-300 rounded-lg w-full"
               id="images"
               accept="image/*"
               multiple
