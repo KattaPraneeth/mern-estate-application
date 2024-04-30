@@ -50,7 +50,6 @@ export default function Profile() {
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         setFilePercent(Math.round(progress));
       },
-
       (error) => {
         setFileUploadErr(true);
       },
