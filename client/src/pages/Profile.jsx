@@ -29,7 +29,11 @@ export default function Profile() {
   const [fileUploadErr, setFileUploadErr] = useState(false);
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [showListingsError, setShowListingError] = useState(false);
+  const [userListings, setUserListings] = useState([]);
   const dispatch = useDispatch();
+
+  // console.log(userListings);
 
   useEffect(() => {
     if (file) {
@@ -116,6 +120,20 @@ export default function Profile() {
       dispatch(signoutUserSuccess(data));
     } catch (error) {}
   };
+  const handleShowListings = async () => {
+    try {
+      setShowListingError(false);
+      const res = await fetch(`/api/user/listings/${currentuser._id}`);
+      const data = await res.json();
+      if (data.success === false) {
+        setShowListingError(true);
+        return;
+      }
+      setUserListings(data);
+    } catch (error) {
+      setShowListingError(true);
+    }
+  };
   return (
     <div className="pd-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -195,6 +213,41 @@ export default function Profile() {
       <p className="text-green-700 my-2">
         {updateSuccess ? "User Update Successfully!" : ""}
       </p>
+      <button onClick={handleShowListings} className="text-green-700 w-full">
+        Show Listing
+      </button>
+      <p className="text-red-700">
+        {" "}
+        {showListingsError ? "Error showing listings" : ""}{" "}
+      </p>
+      {userListings && userListings.length > 0 && (
+        <div>
+        <h1 className="font-semibold text-2xl mt-7 mb-2 text-center">Your Listings</h1>
+          {userListings.map((listing) => {
+            return (
+              <div
+                key={listing._id}
+                className="border border-lg p-3 flex justify-between items-center gap-4"
+              >
+                <Link to={`/listing/${listing._id}`}>
+                  <img
+                    src={listing.imageUrls[0]}
+                    className="h-16 w-16 object-contain"
+                    alt="listing cover"
+                  />
+                </Link>
+                <Link className="text-gray-700 font-semibold flex-1 hover:underline truncate">
+                  <p>{listing.name}</p>
+                </Link>
+                <div className="flex flex-col items-center">
+                  <button className="text-red-700">Delete</button>
+                  <button className="text-green-700">Edit</button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
